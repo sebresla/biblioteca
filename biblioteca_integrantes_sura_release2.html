@@ -1,0 +1,769 @@
+<html lang="es"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca de Integrantes - Sura</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .presentation-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+            color: white;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .sura-logo {
+            width: 100px;
+            height: 50px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+            padding: 8px;
+        }
+
+        .sura-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 200px;
+            gap: 30px;
+            padding: 40px;
+            align-items: start;
+        }
+
+        .profile-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: #f0f4f8;
+            border: 4px solid #0066cc;
+            overflow: hidden;
+            justify-self: center;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-image input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .profile-placeholder {
+            text-align: center;
+            color: #0066cc;
+            font-size: 12px;
+            pointer-events: none;
+        }
+
+        .photo-actions {
+            position: absolute;
+            bottom: 10px;
+            right: 50%;
+            transform: translateX(50%);
+            display: none;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        .profile-image:hover .photo-actions {
+            display: flex;
+        }
+
+        .profile-image.has-photo:hover .photo-actions {
+            display: flex;
+        }
+
+        .photo-btn {
+            background: rgba(0, 102, 204, 0.9);
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .photo-btn:hover {
+            background: rgba(0, 102, 204, 1);
+            transform: scale(1.1);
+        }
+
+        .photo-btn.delete {
+            background: rgba(255, 71, 87, 0.9);
+        }
+
+        .photo-btn.delete:hover {
+            background: rgba(255, 71, 87, 1);
+        }
+
+        .info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .section {
+            position: relative;
+        }
+
+        .section-title {
+            color: #0066cc;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: #0066cc;
+            border-radius: 2px;
+        }
+
+        .section-content {
+            color: #555;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0066cc;
+            margin-bottom: 8px;
+        }
+
+        .editable {
+            border: 2px dashed transparent;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .editable:hover {
+            border-color: #0066cc;
+            background-color: #f0f8ff;
+        }
+
+        .editable:focus {
+            outline: none;
+            border-color: #0066cc;
+            background-color: #f0f8ff;
+        }
+
+        .tech-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .tech-tag {
+            background: #e6f2ff;
+            color: #0066cc;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid #b3d9ff;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tech-tag:hover {
+            background: #cce7ff;
+            transform: translateY(-1px);
+        }
+
+        .tech-tag .delete-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .tech-tag:hover .delete-btn {
+            display: flex;
+        }
+
+        .add-tech-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .add-tech-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        .footer {
+            background: #f8fbff;
+            padding: 25px 40px;
+            text-align: center;
+            border-top: 3px solid #0066cc;
+        }
+
+        .footer-text {
+            color: #0066cc;
+            font-size: 18px;
+            font-weight: 600;
+            font-style: italic;
+        }
+
+        .edit-instructions {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px;
+            color: #856404;
+            font-size: 14px;
+        }
+
+        .edit-instructions h3 {
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .btn {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
+        }
+
+        .btn:hover {
+            background: #004499;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: ' ⏳';
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .profile-image {
+                order: -1;
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .presentation-card {
+                box-shadow: none;
+                max-width: 100%;
+            }
+            
+            .edit-instructions, .controls {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button class="btn" onclick="previewMode()">👁️ Vista Previa</button>
+        <button class="btn btn-success" onclick="downloadAsImage()">📸 Descargar Imagen</button>
+        <button class="btn" onclick="downloadHTML()">💾 Descargar HTML</button>
+    </div>
+
+    <div class="edit-instructions" id="instructions">
+        <h3>📝 INSTRUCCIONES DE EDICIÓN</h3>
+        <p><strong>Para personalizar:</strong> Haz clic en cualquier texto resaltado para editarlo directamente. Para cambiar la foto, haz clic en el círculo de la imagen.</p>
+        <p><strong>Foto:</strong> Haz clic en la imagen para cambiarla. Pasa el mouse sobre ella para ver la opción de eliminar.</p>
+        <p><strong>Tecnologías:</strong> Usa el botón verde "+" para agregar nuevas. Pasa el mouse sobre cada tecnología para ver el botón de eliminar (×).</p>
+        <p><strong>Para guardar:</strong> Usa los botones de la esquina superior derecha para descargar como imagen o HTML.</p>
+    </div>
+
+    <div class="presentation-card">
+        <div class="header">
+            <div class="sura-logo"><div style="color: #0066cc; font-weight: bold; font-size: 20px;">SURA</div></div>
+        </div>
+        
+        <div class="main-content">
+            <div class="info-section">
+                <div class="section">
+                    <div class="name editable" contenteditable="true">Darwin Gomez</div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">¿Quién soy?</div>
+                    <div class="section-content editable" contenteditable="true">
+                        Soy ingeniero de software con mentalidad curiosa y orientación a la mejora continua. Me inspira usar la tecnología para crear cosas que aporten valor.
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Experiencia en proyectos y equipos Sura</div>
+                    <div class="section-content editable" contenteditable="true">
+                        Me apasiona la tecnología, disfruto de la lectura y de compartir tiempo con mi familia. Siempre estoy buscando aprender cosas nuevas que me permitan crecer.
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">Conocimientos técnicos</div>
+                    <div class="section-content">
+                        <div class="editable" contenteditable="true">Conozco Java, Spring Boot, WebFlux, Angular y herramientas como Git, Docker y Azure DevOps. Aplicado buenas prácticas como Clean Code, TDD y arquitectura limpia.</div>
+                        <div class="tech-skills" id="techSkills">
+                            <span class="tech-tag">Java<button class="delete-btn" onclick="deleteTech(this)">×</button></span>
+                            <span class="tech-tag">Spring Boot<button class="delete-btn" onclick="deleteTech(this)">×</button></span>
+                            <span class="tech-tag">WebFlux<button class="delete-btn" onclick="deleteTech(this)">×</button></span>
+                            <span class="tech-tag">Angular<button class="delete-btn" onclick="deleteTech(this)">×</button></span>
+                            <span class="tech-tag">Git<button class="delete-btn" onclick="deleteTech(this)">×</button></span>
+                            <span class="tech-tag">Docker<button class="delete-btn" onclick="deleteTech(this)">×</button></span>
+                            <span class="tech-tag">Azure DevOps<button class="delete-btn" onclick="deleteTech(this)">×</button></span>
+                            <span class="tech-tag">Clean Code<button class="delete-btn" onclick="deleteTech(this)">×</button></span>
+                            <span class="tech-tag">TDD<button class="delete-btn" onclick="deleteTech(this)">×</button></span>
+                            <button class="add-tech-btn" onclick="addNewTech()">+ Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-image" onclick="document.getElementById('photoInput').click()">
+                <input type="file" id="photoInput" accept="image/*" onchange="changePhoto(this)">
+                <div class="profile-placeholder" id="placeholder">
+                    <div style="font-size: 40px; margin-bottom: 10px;">👤</div>
+                    <div>Clic para cambiar foto</div>
+                </div>
+                <div class="photo-actions">
+                    <button class="photo-btn delete" onclick="deletePhoto(event)" title="Eliminar foto">×</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-text">Biblioteca de talento Sura - Conoce a nuestro equipo</div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        // Función para cambiar la foto
+        function changePhoto(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                
+                // Validar que sea una imagen
+                if (!file.type.startsWith('image/')) {
+                    alert('Por favor selecciona un archivo de imagen válido.');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const profileDiv = document.querySelector('.profile-image');
+                    const placeholder = document.getElementById('placeholder');
+                    
+                    // Crear elemento de imagen
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.alt = 'Foto de perfil';
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    img.style.objectFit = 'cover';
+                    
+                    // Reemplazar el placeholder con la imagen
+                    if (placeholder) {
+                        placeholder.remove();
+                    }
+                    
+                    // Remover imagen anterior si existe
+                    const existingImg = profileDiv.querySelector('img');
+                    if (existingImg) {
+                        existingImg.remove();
+                    }
+                    
+                    // Agregar la nueva imagen
+                    profileDiv.appendChild(img);
+                    
+                    // Agregar clase para mostrar botón de eliminar
+                    profileDiv.classList.add('has-photo');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Función para eliminar la foto
+        function deletePhoto(event) {
+            event.stopPropagation(); // Evitar que se active el click del contenedor
+            event.preventDefault();
+            
+            if (confirm('¿Estás seguro de que quieres eliminar la foto?')) {
+                const profileDiv = document.querySelector('.profile-image');
+                const existingImg = profileDiv.querySelector('img');
+                
+                if (existingImg) {
+                    existingImg.remove();
+                    
+                    // Restaurar el placeholder
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'profile-placeholder';
+                    placeholder.id = 'placeholder';
+                    placeholder.innerHTML = `
+                        <div style="font-size: 40px; margin-bottom: 10px;">👤</div>
+                        <div>Clic para cambiar foto</div>
+                    `;
+                    
+                    profileDiv.appendChild(placeholder);
+                    
+                    // Remover clase para ocultar botón de eliminar
+                    profileDiv.classList.remove('has-photo');
+                }
+                
+                // Limpiar el input de archivo
+                document.getElementById('photoInput').value = '';
+            }
+        }
+
+        // Función para agregar nueva tecnología
+        function addNewTech() {
+            const newTech = prompt('Ingresa el nombre de la nueva tecnología:');
+            if (newTech && newTech.trim()) {
+                const techSkills = document.getElementById('techSkills');
+                const addButton = techSkills.querySelector('.add-tech-btn');
+                
+                // Crear nuevo tag
+                const newTag = document.createElement('span');
+                newTag.className = 'tech-tag';
+                newTag.innerHTML = `${newTech.trim()}<button class="delete-btn" onclick="deleteTech(this)">×</button>`;
+                
+                // Insertar antes del botón de agregar
+                techSkills.insertBefore(newTag, addButton);
+            }
+        }
+
+        // Función para eliminar tecnología
+        function deleteTech(button) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta tecnología?')) {
+                button.parentElement.remove();
+            }
+        }
+
+        // Función para editar tecnología al hacer clic
+        document.getElementById('techSkills').addEventListener('click', function(e) {
+            if (e.target.classList.contains('tech-tag') && !e.target.querySelector('.delete-btn')) {
+                const currentText = e.target.textContent;
+                const newText = prompt('Editar tecnología:', currentText);
+                if (newText && newText.trim()) {
+                    e.target.innerHTML = `${newText.trim()}<button class="delete-btn" onclick="deleteTech(this)">×</button>`;
+                }
+            }
+        });
+
+        // Modo vista previa
+        function previewMode() {
+            const instructions = document.getElementById('instructions');
+            const controls = document.querySelector('.controls');
+            const editables = document.querySelectorAll('.editable');
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+            const addButton = document.querySelector('.add-tech-btn');
+            const profileDiv = document.querySelector('.profile-image');
+            
+            if (instructions.style.display === 'none') {
+                // Volver al modo edición
+                instructions.style.display = 'block';
+                controls.querySelector('button').textContent = '👁️ Vista Previa';
+                editables.forEach(el => {
+                    el.contentEditable = 'true';
+                    el.style.cursor = 'text';
+                });
+                deleteButtons.forEach(btn => btn.style.display = 'none');
+                if (addButton) addButton.style.display = 'inline-flex';
+                
+                // Restaurar funcionalidad de foto
+                profileDiv.style.cursor = 'pointer';
+                profileDiv.onclick = function() { document.getElementById('photoInput').click(); };
+            } else {
+                // Modo vista previa
+                instructions.style.display = 'none';
+                controls.querySelector('button').textContent = '✏️ Modo Edición';
+                editables.forEach(el => {
+                    el.contentEditable = 'false';
+                    el.style.cursor = 'default';
+                });
+                deleteButtons.forEach(btn => btn.style.display = 'none');
+                if (addButton) addButton.style.display = 'none';
+                
+                // Desactivar funcionalidad de foto en vista previa
+                profileDiv.style.cursor = 'default';
+                profileDiv.onclick = null;
+            }
+        }
+
+        // Descargar como imagen
+        async function downloadAsImage() {
+            const button = event.target;
+            button.classList.add('loading');
+            button.textContent = 'Generando imagen';
+            
+            try {
+                // Ocultar controles temporalmente
+                const controls = document.querySelector('.controls');
+                const instructions = document.getElementById('instructions');
+                const deleteButtons = document.querySelectorAll('.delete-btn');
+                const addButton = document.querySelector('.add-tech-btn');
+                const photoActions = document.querySelector('.photo-actions');
+                
+                controls.style.display = 'none';
+                instructions.style.display = 'none';
+                
+                // Ocultar TODOS los botones de eliminar y agregar para la captura
+                deleteButtons.forEach(btn => {
+                    btn.style.display = 'none';
+                    btn.style.visibility = 'hidden';
+                });
+                if (addButton) {
+                    addButton.style.display = 'none';
+                    addButton.style.visibility = 'hidden';
+                }
+                if (photoActions) {
+                    photoActions.style.display = 'none';
+                    photoActions.style.visibility = 'hidden';
+                }
+                
+                // Asegurar que todos los tech-tags sean visibles
+                const techTags = document.querySelectorAll('.tech-tag');
+                techTags.forEach(tag => {
+                    tag.style.display = 'inline-flex';
+                    tag.style.visibility = 'visible';
+                });
+                
+                // Pequeña pausa para asegurar que los cambios se apliquen
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                // Configurar html2canvas con mejor configuración
+                const canvas = await html2canvas(document.querySelector('.presentation-card'), {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    logging: false,
+                    onclone: function(clonedDoc) {
+                        // En el documento clonado, asegurar que todo esté visible
+                        const clonedTechTags = clonedDoc.querySelectorAll('.tech-tag');
+                        clonedTechTags.forEach(tag => {
+                            tag.style.display = 'inline-flex';
+                            tag.style.visibility = 'visible';
+                        });
+                        
+                        const clonedDeleteBtns = clonedDoc.querySelectorAll('.delete-btn');
+                        clonedDeleteBtns.forEach(btn => {
+                            btn.style.display = 'none';
+                            btn.style.visibility = 'hidden';
+                        });
+                        
+                        const clonedAddBtn = clonedDoc.querySelector('.add-tech-btn');
+                        if (clonedAddBtn) {
+                            clonedAddBtn.style.display = 'none';
+                            clonedAddBtn.style.visibility = 'hidden';
+                        }
+                        
+                        const clonedPhotoActions = clonedDoc.querySelector('.photo-actions');
+                        if (clonedPhotoActions) {
+                            clonedPhotoActions.style.display = 'none';
+                            clonedPhotoActions.style.visibility = 'hidden';
+                        }
+                    }
+                });
+                
+                // Crear enlace de descarga
+                const link = document.createElement('a');
+                link.download = `perfil-${getNombrePersona()}.png`;
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.click();
+                
+                // Restaurar controles y visibilidad
+                controls.style.display = 'flex';
+                instructions.style.display = 'block';
+                if (addButton) {
+                    addButton.style.display = 'inline-flex';
+                    addButton.style.visibility = 'visible';
+                }
+                
+            } catch (error) {
+                alert('Error al generar la imagen. Inténtalo de nuevo.');
+                console.error('Error:', error);
+            } finally {
+                button.classList.remove('loading');
+                button.textContent = '📸 Descargar Imagen';
+            }
+        }
+
+        // Descargar HTML personalizado
+        function downloadHTML() {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `perfil-${getNombrePersona()}.html`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Obtener nombre de la persona para los archivos
+        function getNombrePersona() {
+            const nombreElement = document.querySelector('.name');
+            return nombreElement.textContent.toLowerCase().replace(/\s+/g, '-');
+        }
+
+        // Guardar cambios automáticamente
+        function saveChanges() {
+            const editableElements = document.querySelectorAll('.editable');
+            const data = {};
+            editableElements.forEach((element, index) => {
+                data[`editable_${index}`] = element.innerHTML;
+            });
+        }
+
+        // Agregar evento de guardado a todos los elementos editables
+        document.querySelectorAll('.editable').forEach(element => {
+            element.addEventListener('input', saveChanges);
+        });
+
+        // Instrucciones en consola
+        console.log('🎯 BIBLIOTECA DE INTEGRANTES SURA - INSTRUCCIONES:');
+        console.log('✏️ Haz clic en cualquier texto para editarlo');
+        console.log('📷 Haz clic en la foto para cambiarla');
+        console.log('🗑️ Pasa el mouse sobre la foto para eliminarla');
+        console.log('🏷️ Haz clic en tecnologías para editarlas');
+        console.log('➕ Usa el botón verde "+" para agregar nuevas tecnologías');
+        console.log('🗑️ Pasa el mouse sobre las tecnologías para eliminarlas');
+        console.log('📸 Usa el botón "Descargar Imagen" para generar PNG');
+        console.log('💾 Usa el botón "Descargar HTML" para guardar la versión editada');
+    </script>
+
+</body></html>
